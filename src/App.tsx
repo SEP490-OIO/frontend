@@ -1,22 +1,18 @@
 /**
- * Root App component for the Bid System.
- * This is the top-level component that wraps the entire application.
- * Structure supports responsive layout and future routing.
+ * Root App Component.
+ *
+ * This is intentionally minimal — all provider setup lives in
+ * app/providers.tsx and all route definitions live in routes/index.tsx.
+ *
+ * App.tsx just connects them together.
  */
-function App() {
-  return (
-    <div className="app">
-      <header className="app-header">
-        <h1>Bid System v1.0</h1>
-        <p className="app-subtitle">Competitive Bidding E-Commerce System</p>
-      </header>
-      <main className="app-main">
-        <p className="welcome-message">
-          Frontend setup complete. Ready for development.
-        </p>
-      </main>
-    </div>
-  )
-}
+import { Providers } from '@/app/providers';
+import { AppRoutes } from '@/routes';
 
-export default App
+export function App() {
+  return (
+    <Providers>
+      <AppRoutes />
+    </Providers>
+  );
+}
