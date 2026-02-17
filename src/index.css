@@ -121,3 +121,80 @@ body {
     padding: var(--spacing-2xl) var(--spacing-lg);
   }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   RESPONSIVE UTILITY CLASSES
+
+   A small set of helpers for common responsive patterns.
+   Uses mobile-first approach: base = mobile, then enhance.
+
+   Breakpoints match our project standard (src/styles/breakpoints.ts):
+   - sm: 640px  (large phones)
+   - md: 768px  (tablets)
+   - lg: 1024px (laptops)
+   - xl: 1280px (desktops)
+   ════════════════════════════════════════════════════════════════ */
+
+/* ─── Visibility ───────────────────────────────────────────────
+   For show/hide based on screen size, use the useBreakpoint() hook
+   with conditional rendering in React — no CSS classes needed.
+   Example: {isMobile && <MobileMenu />}
+   ────────────────────────────────────────────────────────────── */
+
+/* ─── Responsive text alignment ────────────────────────────────
+   Center text on mobile, left-align on desktop.
+   Useful for page headers that look better centered on phones.
+   ────────────────────────────────────────────────────────────── */
+.text-center-mobile {
+  text-align: center;
+}
+@media (min-width: 768px) {
+  .text-center-mobile {
+    text-align: left;
+  }
+}
+
+/* ─── Responsive padding ───────────────────────────────────────
+   Tighter padding on mobile, more breathing room on desktop.
+   ────────────────────────────────────────────────────────────── */
+.padding-responsive {
+  padding: var(--spacing-md);
+}
+@media (min-width: 768px) {
+  .padding-responsive {
+    padding: var(--spacing-lg);
+  }
+}
+@media (min-width: 1024px) {
+  .padding-responsive {
+    padding: var(--spacing-xl);
+  }
+}
+
+/* ─── Responsive stack ─────────────────────────────────────────
+   Flexbox row on desktop, column (stacked) on mobile.
+   Add gap with --stack-gap custom property (default 12px).
+   ────────────────────────────────────────────────────────────── */
+.stack-on-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-gap, 12px);
+}
+@media (min-width: 768px) {
+  .stack-on-mobile {
+    flex-direction: row;
+  }
+}
+
+/* ─── Full-width on mobile ─────────────────────────────────────
+   Makes an element take full width on mobile but respect its
+   natural width on larger screens. Useful for buttons/cards.
+   ────────────────────────────────────────────────────────────── */
+.full-width-mobile {
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .full-width-mobile {
+    width: auto;
+  }
+}

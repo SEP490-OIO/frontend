@@ -24,6 +24,7 @@ import { HomePage } from '@/pages/public/HomePage';
 import { LoginPage } from '@/pages/public/LoginPage';
 import { RegisterPage } from '@/pages/public/RegisterPage';
 import { DashboardPage } from '@/pages/dashboard/DashboardPage';
+import { BrowsePage } from '@/pages/public/BrowsePage';
 
 /** Temporary placeholder for pages not yet built */
 function ComingSoon({ title }: { title: string }) {
@@ -38,7 +39,7 @@ export function AppRoutes() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/browse" element={<ComingSoon title="Browse Auctions" />} />
+        <Route path="/browse" element={<BrowsePage />} />
         <Route path="/auction/:id" element={<ComingSoon title="Auction Detail" />} />
         <Route path="/seller/:id" element={<ComingSoon title="Seller Profile" />} />
       </Route>

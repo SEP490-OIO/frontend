@@ -79,8 +79,8 @@ export function LoginPage() {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 60 }}>
-      <Card style={{ width: 420, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 24 }}>
+      <Card style={{ width: '100%', maxWidth: 420, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
         <Title level={3} style={{ textAlign: 'center', marginBottom: 32 }}>
           {t('auth.loginTitle')}
         </Title>

@@ -1,12 +1,29 @@
 /**
- * Core domain types for the Competitive Bidding Platform.
+ * Central type barrel — re-exports all domain types for convenient imports.
  *
- * These types mirror the PostgreSQL schema (docs/analysis/SP26SE150.sql)
- * and define the shape of data flowing through the frontend.
- * Only types needed for Phase 1 (Foundation) are included here —
- * domain-specific types (Auction, Bid, Wallet, etc.) will be added
- * as those features are built.
+ * Usage:
+ *   import { Auction, Bid, Wallet } from '@/types';
+ *   // OR import directly from the domain file:
+ *   import { Auction } from '@/types/auction';
+ *
+ * Types are organized by business domain, mirroring the PostgreSQL schema
+ * (docs/analysis/SP26SE150.sql) and the Core Flow (docs/analysis/CORE_FLOW_SUMMARY.md).
  */
+
+// ─── Domain re-exports ──────────────────────────────────────────────
+export * from './enums';
+export * from './user';
+export * from './item';
+export * from './auction';
+export * from './wallet';
+export * from './order';
+export * from './notification';
+export * from './admin';
+
+// ─── Core types (defined below, not in separate files) ──────────────
+// These are foundational types used across the entire app (auth, API, UI).
+// They stay here because they were part of the original Phase 1 setup
+// and are imported everywhere.
 
 // ─── Roles ───────────────────────────────────────────────────────────
 // Matches the 9 roles defined in Alignment Analysis (Decision #7)
