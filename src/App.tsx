@@ -8,11 +8,15 @@
  */
 import { Providers } from '@/app/providers';
 import { AppRoutes } from '@/routes';
+import { ErrorBoundary } from '@/components/common/ErrorBoundary';
+import { ErrorPage } from '@/pages/public/ErrorPage';
 
 export function App() {
   return (
     <Providers>
-      <AppRoutes />
+      <ErrorBoundary fallback={<ErrorPage />}>
+        <AppRoutes />
+      </ErrorBoundary>
     </Providers>
   );
 }

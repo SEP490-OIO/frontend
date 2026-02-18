@@ -126,4 +126,11 @@ export interface ItemSummary {
   estimatedValue: number | null;
   categoryId: string;
   categoryName: string | null;
+  /**
+   * Optional fields populated in detail responses (GET /auctions/:id).
+   * Not present in list/card responses to keep payloads small.
+   */
+  description?: string | null;
+  images?: ItemImage[];
+  attributes?: ItemAttribute[];
 }

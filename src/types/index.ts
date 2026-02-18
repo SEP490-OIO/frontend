@@ -19,6 +19,7 @@ export * from './wallet';
 export * from './order';
 export * from './notification';
 export * from './admin';
+export * from './dashboard';
 
 // ─── Core types (defined below, not in separate files) ──────────────
 // These are foundational types used across the entire app (auth, API, UI).

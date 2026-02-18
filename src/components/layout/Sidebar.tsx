@@ -1,14 +1,14 @@
 /**
- * Sidebar — role-based navigation menu.
+ * Sidebar — role-based navigation menu (Shopee-style).
  *
- * Shows different menu items based on the user's roles.
- * Uses Ant Design's Menu component inside a Layout.Sider.
+ * Light background, simple text links with icons, no collapse.
+ * Sticky below the header — stays in place while content scrolls.
+ * Has its own scroll if menu items exceed the viewport height.
  *
  * Responsive behavior:
- * - Desktop (≥768px): Visible as a collapsible sidebar
- * - Mobile (<768px): Completely hidden — AppLayout shows a Drawer instead
+ * - Desktop (≥992px): Visible as a fixed-width sidebar
+ * - Tablet + Mobile (<992px): Hidden — AppLayout shows a Drawer instead
  */
-import { useState } from 'react';
 import { Layout, Menu } from 'antd';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -19,59 +19,34 @@ import { buildMenuItems } from './buildMenuItems';
 const { Sider } = Layout;
 
 export function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
   const user = useAppSelector((state) => state.auth.user);
-  const { isMobile } = useBreakpoint();
+  const { isDesktop } = useBreakpoint();
 
   const roles = user?.roles ?? ['bidder'];
   const menuItems = buildMenuItems(roles, t);
 
-  // On mobile, the sidebar is completely hidden.
+  // On mobile + tablet, the sidebar is hidden.
   // AppLayout renders a Drawer with the same menu items instead.
-  if (isMobile) return null;
+  if (!isDesktop) return null;
 
   return (
     <Sider
       width={240}
-      collapsible
-      collapsed={collapsed}
-      onCollapse={setCollapsed}
-      breakpoint="lg"
-      collapsedWidth={80}
       style={{
-        overflow: 'auto',
-        height: '100vh',
-        position: 'sticky',
-        top: 0,
-        left: 0,
+        background: '#fff',
+        borderRight: '1px solid #f0f0f0',
+        overflowY: 'auto',
       }}
     >
-      <div
-        style={{
-          height: 48,
-          margin: 16,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#fff',
-          fontWeight: 700,
-          fontSize: collapsed ? 14 : 18,
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-        }}
-      >
-        {collapsed ? 'ĐG' : t('app.name')}
-      </div>
-
       <Menu
-        theme="dark"
         mode="inline"
         selectedKeys={[location.pathname]}
         items={menuItems}
         onClick={({ key }) => navigate(key)}
+        style={{ borderInlineEnd: 'none', paddingTop: 8 }}
       />
     </Sider>
   );

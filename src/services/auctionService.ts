@@ -12,13 +12,15 @@
  */
 
 import type {
+  Auction,
   AuctionListItem,
   AuctionFilters,
   PaginatedResponse,
   Bid,
   Category,
 } from '@/types';
-import { MOCK_AUCTION_LIST, MOCK_BIDS_AUCTION_1 } from './mock/auctions';
+import { MOCK_AUCTION_LIST } from './mock/auctions';
+import { getMockAuctionDetail, getMockAuctionBids } from './mock/auctionDetails';
 import { MOCK_CATEGORIES, MOCK_CATEGORIES_FLAT } from './mock/categories';
 import { mockDelay } from './mock/helpers';
 
@@ -160,15 +162,14 @@ export async function getAuctions(
 // ─── Single Auction Detail ──────────────────────────────────────
 
 /**
- * Fetches a single auction by ID.
- * Returns the AuctionListItem for now — the full Auction type
- * will be used when building the Auction Detail page.
+ * Fetches a single auction by ID — returns the full Auction type
+ * with nested item, seller, bids, and deposit info.
  */
 export async function getAuctionById(
   id: string
-): Promise<AuctionListItem | null> {
+): Promise<Auction | null> {
   await mockDelay();
-  return MOCK_AUCTION_LIST.find((a) => a.id === id) ?? null;
+  return getMockAuctionDetail(id);
 }
 
 // ─── Bid History ────────────────────────────────────────────────
@@ -179,12 +180,7 @@ export async function getAuctionById(
  */
 export async function getAuctionBids(auctionId: string): Promise<Bid[]> {
   await mockDelay();
-
-  // Only have mock bids for auction #1
-  if (auctionId === MOCK_BIDS_AUCTION_1[0]?.auctionId) {
-    return MOCK_BIDS_AUCTION_1;
-  }
-  return [];
+  return getMockAuctionBids(auctionId);
 }
 
 // ─── Categories ─────────────────────────────────────────────────

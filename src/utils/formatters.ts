@@ -52,6 +52,27 @@ export function formatCountdown(
   return t('auction.countdownMinutes', { minutes });
 }
 
+/**
+ * Formats an ISO datetime as a relative time string (e.g., "2 giờ trước").
+ * Used in bid history lists to show when each bid was placed.
+ */
+export function formatRelativeTime(
+  isoString: string,
+  t: (key: string, options?: Record<string, unknown>) => string
+): string {
+  const ms = Date.now() - new Date(isoString).getTime();
+  const totalMinutes = Math.floor(ms / 60_000);
+
+  if (totalMinutes < 1) return t('auctionDetail.timeAgo.now');
+  if (totalMinutes < 60) return t('auctionDetail.timeAgo.minutes', { count: totalMinutes });
+
+  const hours = Math.floor(totalMinutes / 60);
+  if (hours < 24) return t('auctionDetail.timeAgo.hours', { count: hours });
+
+  const days = Math.floor(hours / 24);
+  return t('auctionDetail.timeAgo.days', { count: days });
+}
+
 // ─── Labels ─────────────────────────────────────────────────────────
 
 /**

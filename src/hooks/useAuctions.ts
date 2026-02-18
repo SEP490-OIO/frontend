@@ -17,6 +17,7 @@ import type { AuctionFilters } from '@/types';
 import {
   getAuctions,
   getAuctionById,
+  getAuctionBids,
   getCategories,
 } from '@/services/auctionService';
 
@@ -47,6 +48,21 @@ export function useAuction(id: string | undefined) {
     queryKey: ['auction', id],
     queryFn: () => getAuctionById(id!),
     enabled: !!id,
+  });
+}
+
+// ─── Bid History (Detail page) ───────────────────────────────────
+
+/**
+ * Fetches bid history for a specific auction.
+ * Separate from useAuction so bids can be refreshed independently
+ * (e.g., polling for new bids on active auctions in Layer 2).
+ */
+export function useAuctionBids(auctionId: string | undefined) {
+  return useQuery({
+    queryKey: ['auctionBids', auctionId],
+    queryFn: () => getAuctionBids(auctionId!),
+    enabled: !!auctionId,
   });
 }
 

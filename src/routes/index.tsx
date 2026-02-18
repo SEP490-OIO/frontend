@@ -13,7 +13,7 @@
  * Placeholder routes render a simple "Coming Soon" page until
  * the actual page component is built.
  */
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Result } from 'antd';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -25,6 +25,8 @@ import { LoginPage } from '@/pages/public/LoginPage';
 import { RegisterPage } from '@/pages/public/RegisterPage';
 import { DashboardPage } from '@/pages/dashboard/DashboardPage';
 import { BrowsePage } from '@/pages/public/BrowsePage';
+import { AuctionDetailPage } from '@/pages/public/AuctionDetailPage';
+import { NotFoundPage } from '@/pages/public/NotFoundPage';
 
 /** Temporary placeholder for pages not yet built */
 function ComingSoon({ title }: { title: string }) {
@@ -40,7 +42,7 @@ export function AppRoutes() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/browse" element={<BrowsePage />} />
-        <Route path="/auction/:id" element={<ComingSoon title="Auction Detail" />} />
+        <Route path="/auction/:id" element={<AuctionDetailPage />} />
         <Route path="/seller/:id" element={<ComingSoon title="Seller Profile" />} />
       </Route>
 
@@ -124,8 +126,9 @@ export function AppRoutes() {
       </Route>
 
       {/* ─── Catch-all: 404 ─────────────────────────────────────── */}
-      <Route path="/404" element={<Result status="404" title="404" subTitle="Page not found." />} />
-      <Route path="*" element={<Navigate to="/404" replace />} />
+      <Route element={<PublicLayout />}>
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
     </Routes>
   );
 }
