@@ -1,94 +1,78 @@
-# Bid System v1.0 - Frontend
+# Bid System v1.0 — Frontend
 
-Responsive web frontend for the Competitive Bidding E-Commerce System. Built with **React** and **TypeScript** using **Vite**.
+Responsive web frontend for the Competitive Bidding E-Commerce Platform. Built with **React 18**, **TypeScript**, **Vite**, and **Ant Design 5**.
 
-## Features
-
-- **Responsive design** – Works on desktop, tablet, and mobile
-- **TypeScript** – Type-safe development
-- **Vite** – Fast development server and builds
-- **Mobile-first** – CSS breakpoints and structure support future mobile use
-
-## Prerequisites
-
-- Node.js 18 or higher
-- npm (or yarn / pnpm)
-
-## Setup
+## Quick Start
 
 ```bash
 npm install
+npm run dev          # http://localhost:3000 with HMR
+npm run build        # TypeScript check + production build
+npm run lint         # ESLint
+npm run preview      # Preview production build
 ```
 
-## Development
+**Requires:** Node.js 18+
 
-```bash
-npm run dev
-```
+## Implemented Pages
 
-Opens the app at `http://localhost:3000` with hot module replacement (HMR).
+| Route | Page | Description |
+|-------|------|-------------|
+| `/` | Home | Landing page |
+| `/browse` | Browse | Auction catalog with filters, search, AuctionCard grid |
+| `/auction/:id` | Auction Detail | Image gallery, bid history, interactive bidding panel |
+| `/dashboard` | Dashboard | Stats, active bids, recent results, wallet summary |
+| `/wallet` | Wallet | Balance overview, transaction history, add/withdraw modals |
+| `/my-bids` | My Bids | 3 tabs (Active/Ended/Watching), table/card toggle, filters |
 
-## Build
+## Tech Stack
 
-```bash
-npm run build
-```
-
-Production build is output to `dist/`. The build is optimised for deployment to any static hosting service.
-
-## Preview
-
-```bash
-npm run preview
-```
-
-Serves the production build locally for testing.
-
-## Lint
-
-```bash
-npm run lint
-```
-
-Runs ESLint on the codebase.
+- **UI:** Ant Design 5+ (60+ components, Vietnamese locale)
+- **State:** Redux Toolkit (auth) + TanStack Query 5 (server data)
+- **Routing:** React Router v7
+- **Forms:** React Hook Form + Zod
+- **HTTP:** Axios
+- **i18n:** react-i18next (Vietnamese primary, English secondary)
 
 ## Project Structure
 
 ```
-frontend/
-├── public/           # Static assets
-├── src/
-│   ├── components/   # Reusable UI components
-│   ├── pages/        # Page-level components (screens)
-│   ├── hooks/        # Custom React hooks
-│   ├── types/        # TypeScript type definitions
-│   ├── utils/        # Utility functions
-│   ├── styles/       # Breakpoints and shared style utilities
-│   ├── App.tsx       # Root component
-│   ├── main.tsx      # Entry point
-│   └── index.css     # Global styles (responsive foundation)
-├── index.html
-├── package.json
-├── tsconfig.json
-└── vite.config.ts
+src/
+├── components/
+│   ├── auction/       # AuctionCard, BiddingPanel, BidForm, ImageGallery, etc.
+│   ├── dashboard/     # StatsRow, WalletSummaryCard, MyActiveBidsTable, etc.
+│   ├── wallet/        # BalanceOverview, TransactionHistory, AddFundsModal, etc.
+│   ├── mybids/        # ActiveBidsList, EndedBidsList, WatchingList
+│   ├── layout/        # AppLayout, PublicLayout, AppHeader, Sidebar
+│   └── common/        # ErrorBoundary
+├── pages/
+│   ├── public/        # HomePage, BrowsePage, AuctionDetailPage, Login, Register
+│   ├── dashboard/     # DashboardPage
+│   ├── wallet/        # WalletPage
+│   └── mybids/        # MyBidsPage
+├── hooks/             # useAuctions, useBidding, useWallet, useMyBids, useBreakpoint, etc.
+├── services/          # API clients + mock/ data (swap to real API later)
+├── types/             # TypeScript definitions (auction, user, wallet, dashboard, etc.)
+├── locales/           # vi/common.json, en/common.json
+├── routes/            # React Router config
+├── store/             # Redux slices
+└── utils/             # formatVND, formatCountdown, STATUS_KEYS, etc.
 ```
 
 ## Responsive Design
 
-The app uses a mobile-first approach:
-
-- **Base styles** – Optimised for mobile
-- **Breakpoints** – `src/styles/breakpoints.ts` defines sm (640px), md (768px), lg (1024px), xl (1280px)
-- **CSS variables** – `src/index.css` defines spacing, typography, and layout tokens
+Uses Ant Design's grid + custom `useBreakpoint()` hook:
+- **Mobile** (<768px) — single column, compact lists, Select dropdowns for long labels
+- **Tablet** (768–991px) — 2 columns, sidebar hidden (hamburger menu)
+- **Desktop** (≥992px) — full layout with 240px sidebar
 
 ## Path Aliases
 
-Use `@/` to import from `src/`:
-
+`@/` maps to `src/`:
 ```ts
-import { breakpoints } from '@/styles/breakpoints'
+import { AuctionCard } from '@/components/auction/AuctionCard';
 ```
 
-## Future Considerations
+## Data Strategy
 
-The structure supports adding a dedicated mobile app later. Shared logic (e.g. API clients, types, utilities) can be extracted for reuse.
+Mock data first — all services use `mockDelay()` + static data. When backend is ready, swap the service function bodies. UI code stays unchanged (TanStack Query handles caching/loading/errors).

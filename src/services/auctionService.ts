@@ -13,16 +13,25 @@
 
 import type {
   Auction,
+  AuctionDeposit,
   AuctionListItem,
   AuctionFilters,
-  PaginatedResponse,
   Bid,
+  BuyNowResponse,
   Category,
+  JoinAuctionResponse,
+  PaginatedResponse,
+  PlaceBidResponse,
+  ToggleWatchResponse,
 } from '@/types';
 import { MOCK_AUCTION_LIST } from './mock/auctions';
-import { getMockAuctionDetail, getMockAuctionBids } from './mock/auctionDetails';
+import {
+  CURRENT_USER_ID,
+  getMockAuctionDetail,
+  getMockAuctionBids,
+} from './mock/auctionDetails';
 import { MOCK_CATEGORIES, MOCK_CATEGORIES_FLAT } from './mock/categories';
-import { mockDelay } from './mock/helpers';
+import { mockDelay, mockId } from './mock/helpers';
 
 // ─── Auction List (Browse page) ─────────────────────────────────
 
@@ -195,4 +204,125 @@ export async function getCategories(): Promise<Category[]> {
 export async function getCategoriesFlat(): Promise<Category[]> {
   await mockDelay(100, 300);
   return MOCK_CATEGORIES_FLAT;
+}
+
+// ─── Mutations (Layer 2: Interactive Bidding) ────────────────────
+
+/**
+ * Join auction qualification by paying the deposit.
+ * Mock: simulates deposit creation (Available → Locked).
+ * In production: POST /auctions/:id/qualify
+ */
+export async function joinAuction(
+  auctionId: string
+): Promise<JoinAuctionResponse> {
+  await mockDelay();
+  const auction = getMockAuctionDetail(auctionId);
+  if (!auction) throw new Error('Auction not found');
+
+  const deposit: AuctionDeposit = {
+    id: mockId('deposit', Date.now()),
+    auctionId,
+    userId: CURRENT_USER_ID,
+    amount: auction.depositAmount ?? 0,
+    currency: 'VND',
+    sourceType: 'wallet',
+    status: 'holding',
+    auctionResult: null,
+    depositedAt: new Date().toISOString(),
+    refundedAt: null,
+    forfeitedAt: null,
+  };
+
+  return {
+    deposit,
+    newQualifiedCount: auction.qualifiedCount + 1,
+  };
+}
+
+/**
+ * Place a bid on an open auction.
+ * Mock: validates nothing — just returns success.
+ * In production: POST /auctions/:id/bids
+ */
+export async function placeBid(
+  auctionId: string,
+  amount: number
+): Promise<PlaceBidResponse> {
+  await mockDelay();
+
+  const bid: Bid = {
+    id: mockId('bid', Date.now()),
+    auctionId,
+    bidderId: CURRENT_USER_ID,
+    bidderName: 'Bạn',
+    amount,
+    isAutoBid: false,
+    autoBidId: null,
+    status: 'winning',
+    createdAt: new Date().toISOString(),
+  };
+
+  return { bid, newCurrentPrice: amount };
+}
+
+/**
+ * Submit a sealed bid (one-time, hidden).
+ * Mock: records the bid but doesn't reveal it.
+ * In production: POST /auctions/:id/sealed-bid
+ */
+export async function submitSealedBid(
+  auctionId: string,
+  amount: number
+): Promise<PlaceBidResponse> {
+  await mockDelay();
+
+  const bid: Bid = {
+    id: mockId('bid', Date.now()),
+    auctionId,
+    bidderId: CURRENT_USER_ID,
+    bidderName: null,
+    amount,
+    isAutoBid: false,
+    autoBidId: null,
+    status: 'active',
+    createdAt: new Date().toISOString(),
+  };
+
+  return { bid, newCurrentPrice: amount };
+}
+
+/**
+ * Buy-now — instant purchase at the buyNowPrice.
+ * Mock: returns a fake order ID.
+ * In production: POST /auctions/:id/buy-now
+ */
+export async function buyNow(
+  auctionId: string
+): Promise<BuyNowResponse> {
+  await mockDelay(500, 1200);
+  const auction = getMockAuctionDetail(auctionId);
+  return {
+    orderId: mockId('order', Date.now()),
+    finalPrice: auction?.buyNowPrice ?? 0,
+  };
+}
+
+/**
+ * Toggle watch/unwatch for an auction.
+ * Mock: flips the boolean.
+ * In production: POST /auctions/:id/watch
+ */
+export async function toggleWatch(
+  auctionId: string,
+  currentlyWatching: boolean
+): Promise<ToggleWatchResponse> {
+  await mockDelay(100, 300);
+  // In a real API, the server would return the updated watch count
+  const auction = getMockAuctionDetail(auctionId);
+  const currentCount = auction?.watchCount ?? 0;
+  return {
+    isWatching: !currentlyWatching,
+    newWatchCount: currentlyWatching ? currentCount - 1 : currentCount + 1,
+  };
 }

@@ -24,9 +24,11 @@ import { HomePage } from '@/pages/public/HomePage';
 import { LoginPage } from '@/pages/public/LoginPage';
 import { RegisterPage } from '@/pages/public/RegisterPage';
 import { DashboardPage } from '@/pages/dashboard/DashboardPage';
+import { WalletPage } from '@/pages/wallet/WalletPage';
 import { BrowsePage } from '@/pages/public/BrowsePage';
 import { AuctionDetailPage } from '@/pages/public/AuctionDetailPage';
 import { NotFoundPage } from '@/pages/public/NotFoundPage';
+import { MyBidsPage } from '@/pages/mybids/MyBidsPage';
 
 /** Temporary placeholder for pages not yet built */
 function ComingSoon({ title }: { title: string }) {
@@ -56,8 +58,8 @@ export function AppRoutes() {
       >
         {/* Bidder pages (default for all logged-in users) */}
         <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/wallet" element={<ComingSoon title="Wallet" />} />
-        <Route path="/my-bids" element={<ComingSoon title="My Bids" />} />
+        <Route path="/wallet" element={<WalletPage />} />
+        <Route path="/my-bids" element={<MyBidsPage />} />
         <Route path="/orders" element={<ComingSoon title="Orders" />} />
         <Route path="/notifications" element={<ComingSoon title="Notifications" />} />
         <Route path="/profile" element={<ComingSoon title="Profile" />} />

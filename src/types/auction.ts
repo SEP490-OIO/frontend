@@ -291,3 +291,29 @@ export interface AuctionFilters {
   /** Items per page */
   pageSize?: number;
 }
+
+// ─── Mutation Responses (Layer 2: Interactive Bidding) ─────────────
+
+/** Response after joining auction qualification (paying deposit) */
+export interface JoinAuctionResponse {
+  deposit: AuctionDeposit;
+  newQualifiedCount: number;
+}
+
+/** Response after placing a bid (open) or sealed bid */
+export interface PlaceBidResponse {
+  bid: Bid;
+  newCurrentPrice: number;
+}
+
+/** Response after buy-now instant purchase */
+export interface BuyNowResponse {
+  orderId: string;
+  finalPrice: number;
+}
+
+/** Response after toggling watch/unwatch */
+export interface ToggleWatchResponse {
+  isWatching: boolean;
+  newWatchCount: number;
+}

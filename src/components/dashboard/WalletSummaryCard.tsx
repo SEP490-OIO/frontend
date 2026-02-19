@@ -2,8 +2,8 @@
  * WalletSummaryCard — balance breakdown with quick action placeholders.
  *
  * Shows the 3 main balance types (available, locked, refund) with
- * color-coded dots, formatted in VND. Action buttons are disabled
- * placeholders until the Wallet page is built (Step 6).
+ * color-coded dots, formatted in VND. Action buttons navigate to
+ * the Wallet page where the user can add funds or withdraw.
  */
 
 import { Card, Divider, Button, Space, Skeleton, Typography } from 'antd';
@@ -110,10 +110,14 @@ export function WalletSummaryCard({
           <Divider style={{ margin: '12px 0' }} />
 
           <Space style={{ width: '100%' }} direction="vertical" size={8}>
-            <Button block icon={<PlusOutlined />} disabled>
+            <Button
+              block
+              icon={<PlusOutlined />}
+              onClick={() => navigate('/wallet')}
+            >
               {t('dashboard.addFunds')}
             </Button>
-            <Button block disabled>
+            <Button block onClick={() => navigate('/wallet')}>
               {t('dashboard.withdraw')}
             </Button>
           </Space>

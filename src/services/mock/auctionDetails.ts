@@ -10,6 +10,7 @@
 
 import type {
   Auction,
+  AuctionDeposit,
   AuctionListItem,
   Bid,
   ItemImage,
@@ -20,6 +21,10 @@ import type { SellerSummary } from '@/types';
 import { MOCK_AUCTION_LIST, MOCK_BIDS_AUCTION_1 } from './auctions';
 import { MOCK_SELLERS } from './users';
 import { mockId, mockDate } from './helpers';
+
+// ─── Current user ID (matches MOCK_WALLET.userId and dashboard) ──
+
+export const CURRENT_USER_ID = mockId('user', 100);
 
 // ─── Image data per auction (3-5 images each) ──────────────────────
 
@@ -281,6 +286,59 @@ const PRICING_CONFIG: Record<number, AuctionPricingConfig> = {
   16: { bidIncrement: 100_000,  reservePrice: null,       depositPercentage: 10 },
 };
 
+// ─── Current user's relationship with each auction ───────────────
+//
+// Simulates the "current user" (user-00000100-mock) having different
+// states across auctions. Aligns with dashboard mock data:
+// - Bidding on #1 (winning), #3 (outbid), #4 (outbid)
+// - Won #8, lost #9
+// - Watching #2, #6, #12
+
+interface UserAuctionState {
+  deposit: AuctionDeposit | null;
+  isWatching: boolean;
+  winnerId: string | null;
+  winningBidId: string | null;
+}
+
+function buildDeposit(
+  auctionIndex: number,
+  amount: number,
+  status: AuctionDeposit['status'],
+): AuctionDeposit {
+  return {
+    id: mockId('deposit', auctionIndex),
+    auctionId: mockId('auction', auctionIndex),
+    userId: CURRENT_USER_ID,
+    amount,
+    currency: 'VND',
+    sourceType: 'wallet',
+    status,
+    auctionResult: status === 'applied' ? 'winner' : status === 'refunded' ? 'outbid' : null,
+    depositedAt: mockDate(-72),
+    refundedAt: status === 'refunded' ? mockDate(-24) : null,
+    forfeitedAt: null,
+  };
+}
+
+/** Maps auction index → user's simulated state for that auction */
+const MOCK_USER_STATE: Record<number, UserAuctionState> = {
+  1:  { deposit: buildDeposit(1, 2_000_000, 'holding'),   isWatching: false, winnerId: null, winningBidId: null },
+  3:  { deposit: buildDeposit(3, 1_800_000, 'holding'),   isWatching: false, winnerId: null, winningBidId: null },
+  4:  { deposit: buildDeposit(4, 300_000,   'holding'),   isWatching: false, winnerId: null, winningBidId: null },
+  5:  { deposit: buildDeposit(5, 550_000,   'holding'),   isWatching: false, winnerId: null, winningBidId: null },
+  8:  { deposit: buildDeposit(8, 1_000_000, 'applied'),   isWatching: false, winnerId: CURRENT_USER_ID, winningBidId: mockId('bid', 110) },
+  9:  { deposit: buildDeposit(9, 600_000,   'refunded'),  isWatching: false, winnerId: mockId('user', 11), winningBidId: mockId('bid', 901) },
+  // Watching but not qualified
+  2:  { deposit: null, isWatching: true,  winnerId: null, winningBidId: null },
+  6:  { deposit: null, isWatching: true,  winnerId: null, winningBidId: null },
+  12: { deposit: null, isWatching: true,  winnerId: null, winningBidId: null },
+};
+
+const DEFAULT_USER_STATE: UserAuctionState = {
+  deposit: null, isWatching: false, winnerId: null, winningBidId: null,
+};
+
 // ─── Builder: AuctionListItem → full Auction ────────────────────────
 
 /**
@@ -293,6 +351,7 @@ export function buildMockAuctionDetail(
   listItem: AuctionListItem,
   auctionIndex: number
 ): Auction {
+  const userState = MOCK_USER_STATE[auctionIndex] ?? DEFAULT_USER_STATE;
   const itemId = mockId('item', auctionIndex);
   const pricing = PRICING_CONFIG[auctionIndex] ?? {
     bidIncrement: 200_000,
@@ -356,8 +415,8 @@ export function buildMockAuctionDetail(
     status: listItem.status,
     minimumParticipants: 2,
     qualifiedCount: listItem.qualifiedCount,
-    winnerId: null,
-    winningBidId: null,
+    winnerId: userState.winnerId,
+    winningBidId: userState.winningBidId,
 
     // Anti-sniping
     autoExtend: listItem.auctionType === 'open',
@@ -377,9 +436,9 @@ export function buildMockAuctionDetail(
     item,
     seller,
     recentBids: bids,
-    currentUserDeposit: null,
+    currentUserDeposit: userState.deposit,
     currentUserAutoBid: null,
-    isWatching: false,
+    isWatching: userState.isWatching,
 
     // Meta
     createdAt: createdDate.toISOString(),
@@ -405,4 +464,17 @@ export function getMockAuctionDetail(id: string): Auction | null {
 /** Returns bids for a given auction ID */
 export function getMockAuctionBids(auctionId: string): Bid[] {
   return BIDS_MAP[auctionId] ?? [];
+}
+
+/**
+ * Clears the detail cache for a specific auction (or all).
+ * Called after mutations so the next fetch rebuilds with fresh data.
+ */
+export function invalidateDetailCache(id?: string): void {
+  if (!detailCache) return;
+  if (id) {
+    detailCache.delete(id);
+  } else {
+    detailCache = null;
+  }
 }
