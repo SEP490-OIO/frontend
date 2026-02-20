@@ -230,6 +230,7 @@ export interface AuctionListItem {
   qualifiedCount: number;
   isFeatured: boolean;
   // ─── From the seller ──────────────────────────────────────────
+  sellerId: string;
   sellerName: string | null;
   sellerRating: number;
   sellerTrustScore: number;

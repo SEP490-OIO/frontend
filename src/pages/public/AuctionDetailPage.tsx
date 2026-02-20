@@ -107,9 +107,14 @@ export function AuctionDetailPage() {
             {/* Interactive bidding panel (replaces the old static pricing Card) */}
             <BiddingPanel auction={auction} bids={bids ?? []} />
 
-            {/* Seller info card */}
+            {/* Seller info card (clickable → seller profile) */}
             {auction.seller && (
-              <Card size="small">
+              <Card
+                size="small"
+                hoverable
+                onClick={() => navigate(`/seller/${auction.sellerId}`)}
+                style={{ cursor: 'pointer' }}
+              >
                 <Flex align="center" gap={12}>
                   <Avatar
                     src={auction.seller.avatarUrl}

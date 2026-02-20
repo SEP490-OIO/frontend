@@ -29,6 +29,9 @@ import { BrowsePage } from '@/pages/public/BrowsePage';
 import { AuctionDetailPage } from '@/pages/public/AuctionDetailPage';
 import { NotFoundPage } from '@/pages/public/NotFoundPage';
 import { MyBidsPage } from '@/pages/mybids/MyBidsPage';
+import { SellerProfilePage } from '@/pages/seller/SellerProfilePage';
+import { OrdersPage } from '@/pages/orders/OrdersPage';
+import { OrderDetailPage } from '@/pages/orders/OrderDetailPage';
 
 /** Temporary placeholder for pages not yet built */
 function ComingSoon({ title }: { title: string }) {
@@ -45,7 +48,7 @@ export function AppRoutes() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/browse" element={<BrowsePage />} />
         <Route path="/auction/:id" element={<AuctionDetailPage />} />
-        <Route path="/seller/:id" element={<ComingSoon title="Seller Profile" />} />
+        <Route path="/seller/:id" element={<SellerProfilePage />} />
       </Route>
 
       {/* ─── Authenticated Routes (login required) ──────────────── */}
@@ -60,7 +63,8 @@ export function AppRoutes() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/wallet" element={<WalletPage />} />
         <Route path="/my-bids" element={<MyBidsPage />} />
-        <Route path="/orders" element={<ComingSoon title="Orders" />} />
+        <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/orders/:id" element={<OrderDetailPage />} />
         <Route path="/notifications" element={<ComingSoon title="Notifications" />} />
         <Route path="/profile" element={<ComingSoon title="Profile" />} />
         <Route path="/settings" element={<ComingSoon title="Settings" />} />

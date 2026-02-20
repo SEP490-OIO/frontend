@@ -178,7 +178,7 @@ export function WatchingList({ auctions, isLoading, viewMode }: WatchingListProp
           />
           <Paragraph
             ellipsis={{ rows: 1 }}
-            style={{ margin: 0, maxWidth: 200 }}
+            style={{ margin: 0 }}
           >
             {record.itemTitle}
           </Paragraph>
@@ -188,6 +188,7 @@ export function WatchingList({ auctions, isLoading, viewMode }: WatchingListProp
     {
       title: t('myBids.columnCurrentPrice'),
       key: 'currentPrice',
+      width: 160,
       render: (_: unknown, record: AuctionListItem) => (
         <Text>
           {formatVND(record.currentPrice ?? record.startingPrice)}
@@ -197,6 +198,7 @@ export function WatchingList({ auctions, isLoading, viewMode }: WatchingListProp
     {
       title: t('myBids.columnStatus'),
       key: 'status',
+      width: 120,
       render: (_: unknown, record: AuctionListItem) => (
         <Tag color={STATUS_COLORS[record.status]}>
           {t(STATUS_KEYS[record.status])}
@@ -206,6 +208,7 @@ export function WatchingList({ auctions, isLoading, viewMode }: WatchingListProp
     {
       title: t('myBids.filterType'),
       key: 'type',
+      width: 120,
       render: (_: unknown, record: AuctionListItem) => (
         <Text>
           {record.auctionType === 'sealed'
@@ -217,6 +220,7 @@ export function WatchingList({ auctions, isLoading, viewMode }: WatchingListProp
     {
       title: t('myBids.columnTimeLeft'),
       key: 'timeLeft',
+      width: 150,
       render: (_: unknown, record: AuctionListItem) => {
         const isLive = record.status === 'active' || record.status === 'qualifying';
         return (

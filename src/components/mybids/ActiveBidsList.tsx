@@ -183,7 +183,7 @@ export function ActiveBidsList({ bids, isLoading, viewMode }: ActiveBidsListProp
           />
           <Paragraph
             ellipsis={{ rows: 1 }}
-            style={{ margin: 0, maxWidth: 200 }}
+            style={{ margin: 0 }}
           >
             {record.auction.itemTitle}
           </Paragraph>
@@ -193,6 +193,7 @@ export function ActiveBidsList({ bids, isLoading, viewMode }: ActiveBidsListProp
     {
       title: t('myBids.columnCurrentPrice'),
       key: 'currentPrice',
+      width: 160,
       render: (_: unknown, record: MyBidItem) => (
         <Text>
           {formatVND(record.auction.currentPrice ?? record.auction.startingPrice)}
@@ -202,6 +203,7 @@ export function ActiveBidsList({ bids, isLoading, viewMode }: ActiveBidsListProp
     {
       title: t('myBids.columnYourBid'),
       key: 'yourBid',
+      width: 160,
       render: (_: unknown, record: MyBidItem) => (
         <Text strong>{formatVND(record.myLatestBid.amount)}</Text>
       ),
@@ -209,6 +211,7 @@ export function ActiveBidsList({ bids, isLoading, viewMode }: ActiveBidsListProp
     {
       title: t('myBids.columnStatus'),
       key: 'status',
+      width: 120,
       render: (_: unknown, record: MyBidItem) => {
         const tag = getBidStatusTag(record.myBidStatus, t);
         return <Tag color={tag.color}>{tag.label}</Tag>;
@@ -217,6 +220,7 @@ export function ActiveBidsList({ bids, isLoading, viewMode }: ActiveBidsListProp
     {
       title: t('myBids.columnDeposit'),
       key: 'deposit',
+      width: 120,
       render: () => (
         <Tag color="orange">{t('myBids.depositHolding')}</Tag>
       ),
@@ -224,6 +228,7 @@ export function ActiveBidsList({ bids, isLoading, viewMode }: ActiveBidsListProp
     {
       title: t('myBids.columnTimeLeft'),
       key: 'timeLeft',
+      width: 150,
       render: (_: unknown, record: MyBidItem) => {
         const isLive =
           record.auction.status === 'active' ||

@@ -12,16 +12,19 @@
  * but for mock data we compare IDs directly.
  */
 
-import { Result, Typography, Flex, Tag } from 'antd';
+import { Result, Typography, Flex, Tag, Button } from 'antd';
 import {
   TrophyOutlined,
   CloseCircleOutlined,
   StopOutlined,
   WarningOutlined,
+  ShoppingOutlined,
 } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { Auction } from '@/types';
 import { CURRENT_USER_ID } from '@/services/mock/auctionDetails';
+import { AUCTION_TO_ORDER_MAP } from '@/services/mock/orders';
 import { formatVND } from '@/utils/formatters';
 
 const { Text } = Typography;
@@ -32,6 +35,7 @@ interface AuctionResultProps {
 
 export function AuctionResult({ auction }: AuctionResultProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   // Determine if the current user won this auction
   const isWinner = auction.winnerId === CURRENT_USER_ID;
@@ -54,6 +58,16 @@ export function AuctionResult({ auction }: AuctionResultProps) {
           </Text>
           {depositStatus === 'applied' && (
             <Tag color="green">{t('bidding.depositApplied')}</Tag>
+          )}
+          {/* Link to order page if one exists for this auction */}
+          {AUCTION_TO_ORDER_MAP[auction.id] && (
+            <Button
+              type="primary"
+              icon={<ShoppingOutlined />}
+              onClick={() => navigate(`/orders/${AUCTION_TO_ORDER_MAP[auction.id]}`)}
+            >
+              {t('bidding.viewOrder')}
+            </Button>
           )}
         </Flex>
       </Result>

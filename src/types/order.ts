@@ -60,6 +60,8 @@ export interface Order {
   billingAddress: UserAddress | null;
   /** Escrow record for this order (null before payment) */
   escrow: Escrow | null;
+  /** Carrier tracking data (null until shipped) */
+  tracking: OrderTracking | null;
   createdAt: string;
   modifiedAt: string;
 }
@@ -81,6 +83,25 @@ export interface OrderListItem {
   shippedAt: string | null;
   deliveredAt: string | null;
   createdAt: string;
+}
+
+// ─── Tracking ──────────────────────────────────────────────────────
+
+/** Carrier tracking data for a shipped order */
+export interface OrderTracking {
+  carrier: string;
+  trackingNumber: string;
+  trackingUrl: string | null;
+  estimatedDelivery: string | null;
+  events: TrackingEvent[];
+}
+
+/** A single tracking event from the carrier API */
+export interface TrackingEvent {
+  status: string;
+  description: string;
+  location: string | null;
+  timestamp: string;
 }
 
 // ─── Transaction ────────────────────────────────────────────────────

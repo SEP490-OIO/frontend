@@ -22,6 +22,7 @@ import {
   Typography,
   List,
   Avatar,
+  Button,
   Empty,
   Skeleton,
   Select,
@@ -30,10 +31,12 @@ import {
   Row,
   Col,
 } from 'antd';
+import { ShoppingOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { MyBidItem } from '@/types';
 import { useBreakpoint } from '@/hooks/useBreakpoint';
+import { AUCTION_TO_ORDER_MAP } from '@/services/mock/orders';
 import { formatVND } from '@/utils/formatters';
 
 const { Text, Paragraph } = Typography;
@@ -168,7 +171,7 @@ export function EndedBidsList({ bids, isLoading, viewMode }: EndedBidsListProps)
           />
           <Paragraph
             ellipsis={{ rows: 1 }}
-            style={{ margin: 0, maxWidth: 200 }}
+            style={{ margin: 0 }}
           >
             {record.auction.itemTitle}
           </Paragraph>
@@ -178,6 +181,7 @@ export function EndedBidsList({ bids, isLoading, viewMode }: EndedBidsListProps)
     {
       title: t('myBids.columnFinalPrice'),
       key: 'finalPrice',
+      width: 160,
       render: (_: unknown, record: MyBidItem) => (
         <Text>
           {formatVND(record.auction.currentPrice ?? record.auction.startingPrice)}
@@ -187,6 +191,7 @@ export function EndedBidsList({ bids, isLoading, viewMode }: EndedBidsListProps)
     {
       title: t('myBids.columnYourBid'),
       key: 'yourBid',
+      width: 160,
       render: (_: unknown, record: MyBidItem) => (
         <Text strong>{formatVND(record.myLatestBid.amount)}</Text>
       ),
@@ -194,6 +199,7 @@ export function EndedBidsList({ bids, isLoading, viewMode }: EndedBidsListProps)
     {
       title: t('myBids.columnResult'),
       key: 'result',
+      width: 100,
       render: (_: unknown, record: MyBidItem) => (
         <Tag color={isWon(record) ? 'green' : 'default'}>
           {isWon(record) ? t('myBids.resultWon') : t('myBids.resultLost')}
@@ -203,9 +209,32 @@ export function EndedBidsList({ bids, isLoading, viewMode }: EndedBidsListProps)
     {
       title: t('myBids.columnDeposit'),
       key: 'deposit',
+      width: 120,
       render: (_: unknown, record: MyBidItem) => {
         const dep = getDepositTag(record);
         return <Tag color={dep.color}>{dep.label}</Tag>;
+      },
+    },
+    {
+      title: '',
+      key: 'action',
+      width: 120,
+      render: (_: unknown, record: MyBidItem) => {
+        const orderId = isWon(record) ? AUCTION_TO_ORDER_MAP[record.auction.id] : undefined;
+        if (!orderId) return null;
+        return (
+          <Button
+            type="link"
+            size="small"
+            icon={<ShoppingOutlined />}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/orders/${orderId}`);
+            }}
+          >
+            {t('myBids.viewOrder')}
+          </Button>
+        );
       },
     },
   ];
@@ -240,7 +269,7 @@ export function EndedBidsList({ bids, isLoading, viewMode }: EndedBidsListProps)
                 </Paragraph>
               }
               description={
-                <Flex wrap="wrap" gap={4}>
+                <Flex wrap="wrap" gap={4} align="center">
                   <Text type="secondary" style={{ fontSize: 13 }}>
                     {formatVND(finalPrice)}
                   </Text>
@@ -250,6 +279,20 @@ export function EndedBidsList({ bids, isLoading, viewMode }: EndedBidsListProps)
                   <Tag color={dep.color} style={{ margin: 0 }}>
                     {dep.label}
                   </Tag>
+                  {isWon(item) && AUCTION_TO_ORDER_MAP[item.auction.id] && (
+                    <Button
+                      type="link"
+                      size="small"
+                      icon={<ShoppingOutlined />}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/orders/${AUCTION_TO_ORDER_MAP[item.auction.id]}`);
+                      }}
+                      style={{ padding: 0, height: 'auto' }}
+                    >
+                      {t('myBids.viewOrder')}
+                    </Button>
+                  )}
                 </Flex>
               }
             />
@@ -319,10 +362,26 @@ export function EndedBidsList({ bids, isLoading, viewMode }: EndedBidsListProps)
                 </div>
               </Flex>
 
-              {/* Deposit status */}
-              <Tag color={dep.color} style={{ margin: 0 }}>
-                {dep.label}
-              </Tag>
+              {/* Deposit status + View Order */}
+              <Flex justify="space-between" align="center">
+                <Tag color={dep.color} style={{ margin: 0 }}>
+                  {dep.label}
+                </Tag>
+                {isWon(item) && AUCTION_TO_ORDER_MAP[item.auction.id] && (
+                  <Button
+                    type="link"
+                    size="small"
+                    icon={<ShoppingOutlined />}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/orders/${AUCTION_TO_ORDER_MAP[item.auction.id]}`);
+                    }}
+                    style={{ padding: 0 }}
+                  >
+                    {t('myBids.viewOrder')}
+                  </Button>
+                )}
+              </Flex>
             </Card>
           </Col>
         );

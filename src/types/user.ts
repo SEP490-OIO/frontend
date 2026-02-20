@@ -7,7 +7,7 @@
  * (e.g., UserProfile includes the user's addresses).
  */
 
-import type { Gender, AddressType, VerificationStatus, UserStatus } from './enums';
+import type { Gender, AddressType, VerificationStatus, UserStatus, ReviewStatus } from './enums';
 
 // ─── User Profile ───────────────────────────────────────────────────
 
@@ -104,4 +104,57 @@ export interface SellerSummary {
   ratingCount: number;
   trustScore: number;
   status: VerificationStatus;
+}
+
+// ─── Seller Reviews ──────────────────────────────────────────────
+
+/** Individual review left by a buyer about a seller after a completed order */
+export interface SellerReview {
+  id: string;
+  orderId: string;
+  auctionId: string;
+  reviewerId: string;
+  reviewerName: string;
+  reviewerAvatarUrl: string | null;
+  sellerId: string;
+  overallRating: number; // 1-5
+  communicationRating: number; // 1-5
+  shippingSpeedRating: number; // 1-5
+  itemAccuracyRating: number; // 1-5
+  title: string | null;
+  comment: string | null;
+  images: { id: string; imageUrl: string; sortOrder: number }[];
+  isVerifiedPurchase: boolean;
+  status: ReviewStatus;
+  sellerResponse: string | null;
+  sellerRespondedAt: string | null;
+  helpfulCount: number;
+  notHelpfulCount: number;
+  createdAt: string;
+}
+
+/** Aggregated star-rating breakdown for a seller */
+export interface SellerRatingSummary {
+  sellerId: string;
+  totalReviews: number;
+  averageRating: number;
+  rating5Count: number;
+  rating4Count: number;
+  rating3Count: number;
+  rating2Count: number;
+  rating1Count: number;
+  avgCommunication: number;
+  avgShippingSpeed: number;
+  avgItemAccuracy: number;
+}
+
+/**
+ * Composite type returned by GET /sellers/:id — everything the
+ * Seller Profile page needs in a single response.
+ */
+export interface SellerProfileDetail {
+  profile: SellerProfile;
+  displayName: string;
+  avatarUrl: string | null;
+  ratingSummary: SellerRatingSummary;
 }

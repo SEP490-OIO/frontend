@@ -82,7 +82,7 @@ export function MyActiveBidsTable({ bids, isLoading }: MyActiveBidsTableProps) {
           />
           <Paragraph
             ellipsis={{ rows: 1 }}
-            style={{ margin: 0, maxWidth: 200 }}
+            style={{ margin: 0 }}
           >
             {record.auction.itemTitle}
           </Paragraph>
@@ -92,6 +92,7 @@ export function MyActiveBidsTable({ bids, isLoading }: MyActiveBidsTableProps) {
     {
       title: t('dashboard.currentBid'),
       key: 'currentBid',
+      width: 160,
       render: (_: unknown, record: MyBidItem) => (
         <Text>
           {formatVND(
@@ -103,6 +104,7 @@ export function MyActiveBidsTable({ bids, isLoading }: MyActiveBidsTableProps) {
     {
       title: t('dashboard.yourBid'),
       key: 'yourBid',
+      width: 160,
       render: (_: unknown, record: MyBidItem) => (
         <Text strong>{formatVND(record.myLatestBid.amount)}</Text>
       ),
@@ -110,6 +112,7 @@ export function MyActiveBidsTable({ bids, isLoading }: MyActiveBidsTableProps) {
     {
       title: t('dashboard.status'),
       key: 'status',
+      width: 120,
       render: (_: unknown, record: MyBidItem) => {
         const tag = getBidStatusTag(record.myBidStatus, t);
         return <Tag color={tag.color}>{tag.label}</Tag>;
@@ -118,6 +121,7 @@ export function MyActiveBidsTable({ bids, isLoading }: MyActiveBidsTableProps) {
     {
       title: t('dashboard.timeLeft'),
       key: 'timeLeft',
+      width: 150,
       render: (_: unknown, record: MyBidItem) => {
         const isLive =
           record.auction.status === 'active' ||

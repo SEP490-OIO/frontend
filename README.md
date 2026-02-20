@@ -24,6 +24,9 @@ npm run preview      # Preview production build
 | `/dashboard` | Dashboard | Stats, active bids, recent results, wallet summary |
 | `/wallet` | Wallet | Balance overview, transaction history, add/withdraw modals |
 | `/my-bids` | My Bids | 3 tabs (Active/Ended/Watching), table/card toggle, filters |
+| `/seller/:id` | Seller Profile | Seller info, stats, listings, reviews with ratings |
+| `/orders` | Orders | 3 tabs (Active/Completed/Cancelled), table/card toggle |
+| `/orders/:id` | Order Detail | Timeline, item card, tracking, payment info, actions |
 
 ## Tech Stack
 
@@ -43,16 +46,20 @@ src/
 │   ├── dashboard/     # StatsRow, WalletSummaryCard, MyActiveBidsTable, etc.
 │   ├── wallet/        # BalanceOverview, TransactionHistory, AddFundsModal, etc.
 │   ├── mybids/        # ActiveBidsList, EndedBidsList, WatchingList
+│   ├── seller/        # SellerInfoCard, SellerStats, SellerListings, SellerReviewsList
+│   ├── orders/        # OrderTimeline, OrderItemCard, OrderActions, OrdersList, etc.
 │   ├── layout/        # AppLayout, PublicLayout, AppHeader, Sidebar
 │   └── common/        # ErrorBoundary
 ├── pages/
 │   ├── public/        # HomePage, BrowsePage, AuctionDetailPage, Login, Register
 │   ├── dashboard/     # DashboardPage
 │   ├── wallet/        # WalletPage
-│   └── mybids/        # MyBidsPage
-├── hooks/             # useAuctions, useBidding, useWallet, useMyBids, useBreakpoint, etc.
+│   ├── mybids/        # MyBidsPage
+│   ├── seller/        # SellerProfilePage
+│   └── orders/        # OrdersPage, OrderDetailPage
+├── hooks/             # useAuctions, useBidding, useWallet, useMyBids, useSeller, useOrders, useBreakpoint, etc.
 ├── services/          # API clients + mock/ data (swap to real API later)
-├── types/             # TypeScript definitions (auction, user, wallet, dashboard, etc.)
+├── types/             # TypeScript definitions (auction, user, wallet, dashboard, order, etc.)
 ├── locales/           # vi/common.json, en/common.json
 ├── routes/            # React Router config
 ├── store/             # Redux slices
@@ -61,10 +68,9 @@ src/
 
 ## Responsive Design
 
-Uses Ant Design's grid + custom `useBreakpoint()` hook:
-- **Mobile** (<768px) — single column, compact lists, Select dropdowns for long labels
-- **Tablet** (768–991px) — 2 columns, sidebar hidden (hamburger menu)
-- **Desktop** (≥992px) — full layout with 240px sidebar
+Two-tier system using Ant Design's grid + custom `useBreakpoint()` hook:
+- **Mobile** (<1200px) — single column, compact lists, Select dropdowns, hamburger menu (all phones + tablets)
+- **Desktop** (≥1200px) — full layout with 240px sidebar, tables, side-by-side layouts
 
 ## Path Aliases
 

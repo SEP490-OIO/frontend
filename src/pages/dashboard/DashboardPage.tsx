@@ -58,10 +58,10 @@ export function DashboardPage() {
 
       {/* ─── Section 2: Wallet Summary + Active Bids ────────────── */}
       <Row gutter={[16, 16]} style={{ marginTop: 24 }}>
-        <Col xs={24} xl={8}>
+        <Col xs={24} xxl={8}>
           <WalletSummaryCard wallet={wallet} isLoading={walletLoading} />
         </Col>
-        <Col xs={24} xl={16}>
+        <Col xs={24} xxl={16}>
           <MyActiveBidsTable
             bids={activeBids ?? []}
             isLoading={bidsLoading}

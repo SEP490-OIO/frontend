@@ -173,15 +173,29 @@ export function AuctionCard({ auction }: AuctionCardProps) {
         </Text>
       </Space>
 
-      {/* ─── Seller info ───────────────────────────────────────── */}
+      {/* ─── Seller info (clickable → seller profile) ────────── */}
       <div
+        role="link"
+        tabIndex={0}
+        onClick={(e) => {
+          e.stopPropagation(); // Prevent card click (auction detail)
+          navigate(`/seller/${auction.sellerId}`);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.stopPropagation();
+            navigate(`/seller/${auction.sellerId}`);
+          }
+        }}
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           borderTop: '1px solid #f0f0f0',
           paddingTop: 8,
+          cursor: 'pointer',
         }}
+        title={t('sellerProfile.viewSellerProfile')}
       >
         <Space size={4}>
           <Text style={{ fontSize: 13 }}>{auction.sellerName}</Text>

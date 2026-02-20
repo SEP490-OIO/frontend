@@ -5,7 +5,7 @@
  * Wallet page, Order page, etc.) to ensure consistent formatting.
  */
 
-import type { ItemCondition, AuctionStatus } from '@/types';
+import type { ItemCondition, AuctionStatus, OrderStatus } from '@/types';
 
 // ─── Currency ───────────────────────────────────────────────────────
 
@@ -116,3 +116,49 @@ export const STATUS_COLORS: Record<AuctionStatus, string> = {
   failed: 'red',
   emergency_stopped: 'red',
 };
+
+// ─── Order Status Labels ────────────────────────────────────────────
+
+/** Maps order status to i18n keys for display labels */
+export const ORDER_STATUS_KEYS: Record<OrderStatus, string> = {
+  pending_payment: 'orders.statusPendingPayment',
+  paid: 'orders.statusPaid',
+  processing: 'orders.statusProcessing',
+  shipped: 'orders.statusShipped',
+  delivered: 'orders.statusDelivered',
+  completed: 'orders.statusCompleted',
+  cancelled: 'orders.statusCancelled',
+  refunded: 'orders.statusRefunded',
+  disputed: 'orders.statusDisputed',
+};
+
+/** Maps order status to Ant Design Tag color */
+export const ORDER_STATUS_COLORS: Record<OrderStatus, string> = {
+  pending_payment: 'warning',
+  paid: 'processing',
+  processing: 'processing',
+  shipped: 'blue',
+  delivered: 'warning',
+  completed: 'success',
+  cancelled: 'default',
+  refunded: 'default',
+  disputed: 'error',
+};
+
+// ─── Date Formatting ────────────────────────────────────────────────
+
+/**
+ * Formats an ISO datetime as a localized date/time string.
+ * Uses Vietnamese locale by default.
+ *
+ * Example: formatDate('2026-02-15T10:30:00Z') → "15/02/2026, 17:30"
+ */
+export function formatDate(isoString: string): string {
+  return new Intl.DateTimeFormat('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(isoString));
+}
